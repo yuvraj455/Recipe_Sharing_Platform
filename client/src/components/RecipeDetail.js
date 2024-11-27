@@ -19,7 +19,7 @@ function RecipeDetail({ isAuthenticated }) {
 
   const fetchRecipe = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/recipes/${id}`);
+      const response = await axios.get(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes/${id}`);
       setRecipe(response.data);
       setLoading(false);
     } catch (error) {
@@ -36,7 +36,7 @@ function RecipeDetail({ isAuthenticated }) {
   const handleDelete = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/recipes/${id}`, {
+      await axios.delete(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       navigate('/recipes');
@@ -94,7 +94,7 @@ function RecipeDetail({ isAuthenticated }) {
             <CardMedia
               component="img"
               height="194"
-              image={recipe.image ? `http://localhost:5000${recipe.image}` : '/placeholder.svg?height=194&width=345'}
+              image={recipe.image ? `https://recipe-sharing-platform-av3r.onrender.com${recipe.image}` : '/placeholder.svg?height=194&width=345'}
               alt={recipe.title}
               sx={{
                 borderRadius: '8px',
@@ -174,13 +174,6 @@ function RecipeDetail({ isAuthenticated }) {
             >
               Delete Recipe
             </Button>
-          </Box>
-        )}
-
-        {process.env.NODE_ENV === 'development' && (
-          <Box sx={{ marginTop: 2, padding: 2, border: '1px solid #ccc', borderRadius: 2 }}>
-            <Typography variant="h6">Debug Info:</Typography>
-            <pre>{JSON.stringify(debugInfo, null, 2)}</pre>
           </Box>
         )}
       </Container>

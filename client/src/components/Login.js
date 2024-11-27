@@ -27,7 +27,7 @@ function Login({ setIsAuthenticated }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/auth/login', { email, password });
+      const response = await axios.post('https://recipe-sharing-platform-av3r.onrender.com/auth/login', { email, password });
       localStorage.setItem('token', response.data.token);
       setIsAuthenticated(true);
       navigate('/recipes');
@@ -79,7 +79,7 @@ function Login({ setIsAuthenticated }) {
       </form>
       
       <Button
-        href="http://localhost:5000/auth/google"
+        href="https://recipe-sharing-platform-av3r.onrender.com/auth/google"
         variant="contained"
         color="secondary"
         fullWidth
