@@ -48,7 +48,7 @@ function Home() {
                 🔍 **Discover**: Find inspiration from other users and try something new every day!
               </Typography>
 
-              <Button variant="contained" color="primary" component={Link} to="/recipes" sx={{ marginTop: '20px' }}>
+              <Button variant="contained"  component={Link} to="/recipes" sx={{ marginTop: '20px', backgroundColor: '#004d47' }}>
                 Explore the Recipes
               </Button>
             </Grid>
