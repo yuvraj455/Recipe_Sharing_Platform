@@ -15,7 +15,7 @@ function RecipeList({ isAuthenticated }) {
     const fetchRecipes = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes${searchTerm ? `?search=${searchTerm}` : ''}`);
+        const response = await axios.get(`http://localhost:5000/api/recipes${searchTerm ? `?search=${searchTerm}` : ''}`);
         setRecipes(response.data);
         setLoading(false);
       } catch (error) {
