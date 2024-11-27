@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Container, Typography, Box, Grid, Button } from '@mui/material';
 
 function Home() {
@@ -47,7 +48,7 @@ function Home() {
                 🔍 **Discover**: Find inspiration from other users and try something new every day!
               </Typography>
 
-              <Button variant="contained" color="primary" href="/recipes" sx={{ marginTop: '20px' }}>
+              <Button variant="contained" color="primary" component={Link} to="/recipes" sx={{ marginTop: '20px' }}>
                 Explore the Recipes
               </Button>
             </Grid>
