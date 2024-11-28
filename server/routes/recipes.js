@@ -59,13 +59,14 @@ router.get('/recipes/:id', async (req, res) => {
 // Create a new recipe (authenticated)
 router.post('/recipes', authenticate, upload.single('image'), async (req, res) => {
   try {
-    const { title, ingredients, instructions } = req.body;
+    const { title, ingredients, instructions, youtubeLink } = req.body;
     const recipe = new Recipe({
       title,
       ingredients: ingredients.split(',').map(item => item.trim()),
       instructions,
+      youtubeLink,
       image: req.file ? `/uploads/${req.file.filename}` : null,
-      author: req.user._id
+      author: req.user.id
     });
     await recipe.save();
     res.status(201).json(recipe);
@@ -78,17 +79,18 @@ router.post('/recipes', authenticate, upload.single('image'), async (req, res) =
 // Update a recipe (authenticated)
 router.put('/recipes/:id', authenticate, upload.single('image'), async (req, res) => {
   try {
-    const { title, ingredients, instructions } = req.body;
+    const { title, ingredients, instructions, youtubeLink } = req.body;
     const updateData = {
       title,
       ingredients: ingredients.split(',').map(item => item.trim()),
-      instructions
+      instructions,
+      youtubeLink
     };
     if (req.file) {
       updateData.image = `/uploads/${req.file.filename}`;
     }
     const recipe = await Recipe.findOneAndUpdate(
-      { _id: req.params.id, author: req.user._id },
+      { _id: req.params.id, author: req.user.id },
       updateData,
       { new: true }
     );
@@ -105,7 +107,7 @@ router.put('/recipes/:id', authenticate, upload.single('image'), async (req, res
 // Delete a recipe (authenticated)
 router.delete('/recipes/:id', authenticate, async (req, res) => {
   try {
-    const recipe = await Recipe.findOneAndDelete({ _id: req.params.id, author: req.user._id });
+    const recipe = await Recipe.findOneAndDelete({ _id: req.params.id, author: req.user.id });
     if (!recipe) {
       return res.status(404).json({ message: 'Recipe not found or you are not the author' });
     }
@@ -117,4 +119,3 @@ router.delete('/recipes/:id', authenticate, async (req, res) => {
 });
 
 module.exports = router;
-

@@ -5,6 +5,7 @@ const recipeSchema = new mongoose.Schema({
   ingredients: [String],
   instructions: String,
   image: String,
+  youtubeLink: String,
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   createdAt: { type: Date, default: Date.now }
 });

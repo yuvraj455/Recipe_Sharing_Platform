@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Container, TextField, Box, Button, Typography, Alert } from '@mui/material';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Container, Typography, TextField, Button, Box, Alert } from '@mui/material';
 import axios from 'axios';
 
 function Login({ setIsAuthenticated }) {
@@ -8,37 +8,17 @@ function Login({ setIsAuthenticated }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const location = useLocation();
 
-  useEffect(() => {
-    // Check if the user is already authenticated from query params or local storage
-    const params = new URLSearchParams(location.search);
-    const token = params.get('token');
-    const errorParam = params.get('error');
-
-    if (token) {
-      localStorage.setItem('token', token);
-      setIsAuthenticated(true);
-      navigate('/recipes');
-    } else if (errorParam) {
-      setError('Authentication failed. Please try again.');
-    }
-  }, [location, navigate, setIsAuthenticated]);
-
-  // Handling form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/auth/login', { email, password });
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userId', response.data.user.id);
       setIsAuthenticated(true);
-      
-      // Redirect to the originally requested page or /recipes
-      const previousLocation = location.state?.from || '/recipes';
-      navigate(previousLocation);
+      navigate('/recipes');
     } catch (error) {
-      setError('Invalid email or password');
-      console.error('Login error', error);
+      setError(error.response?.data?.message || 'An error occurred during login');
     }
   };
 
@@ -49,12 +29,23 @@ function Login({ setIsAuthenticated }) {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundImage: `url('https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L3B4MTM2OTgxMy1pbWFnZS1rd3Z4eHA5MS5qcGc.jpg')`,
+        backgroundSize: 'cover', // Ensures the image covers the whole area
+        backgroundPosition: 'center', // Centers the image
+        backgroundRepeat: 'no-repeat', // Prevents tiling
         minHeight: '100vh',
-        backgroundColor: '#fff7e6',
-        padding: 0,
+        padding: 0
       }}
     >
-      <Container maxWidth="sm">
+      <Container
+        maxWidth="xs"
+        sx={{
+          backgroundColor: '#FFFFF0',
+          padding: '50px',
+          borderRadius: '20px', // Adds curved edges
+          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.25)', // Adds a black shadow
+        }}
+      >
         <Typography variant="h4" component="h1" gutterBottom>
           Login
         </Typography>
@@ -78,17 +69,20 @@ function Login({ setIsAuthenticated }) {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <Button type="submit" variant="contained" color="primary" fullWidth>
+          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2, '&:hover': {
+                backgroundColor: '#004d47', // Hover effect color
+              }, }}>
             Login
           </Button>
         </form>
-
         <Button
           href="http://localhost:5000/auth/google"
           variant="contained"
           color="secondary"
           fullWidth
-          sx={{ mt: 2 }}
+          sx={{ mt: 2, '&:hover': {
+                backgroundColor: '#004d47', // Hover effect color
+              }, }}
         >
           Login with Google
         </Button>

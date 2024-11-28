@@ -56,17 +56,20 @@ function Register({ setIsAuthenticated }) {
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '100vh', // Full viewport height
-        backgroundColor: '#fff7e6', // Body background color
+        backgroundImage: `url('https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L3B4MTM2OTgxMy1pbWFnZS1rd3Z4eHA5MS5qcGc.jpg')`,
+        backgroundSize: 'cover', // Ensures the image covers the whole area
+        backgroundPosition: 'center', // Centers the image
+        backgroundRepeat: 'no-repeat', // Prevents tiling
         padding: 0, // Remove padding on outer Box to make it stretch fully
       }}
     >
       <Container
         maxWidth="xs"
         sx={{
-          backgroundColor: '#fafafa', // Off-white background color for the container
-          padding: 4, // Add some padding inside the container
-          borderRadius: 2, // Rounded corners for the container
-          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)', // Box shadow for the container
+          backgroundColor: '#FFFFF0',
+          padding: '50px',
+          borderRadius: '20px', // Adds curved edges
+          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.25)', // Adds a black shadow
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom>

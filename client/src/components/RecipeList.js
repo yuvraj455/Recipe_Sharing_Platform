@@ -73,7 +73,7 @@ function RecipeList({ isAuthenticated }) {
         </Grid>
       )}
       {!loading && recipes.length === 0 && (
-        <Typography variant="body1">No recipes found. Try a different search term.</Typography>
+        <Typography variant="body1" sx={{ padding: '10px' }}>No recipes found. Try a different search term.</Typography>
       )}
     </Container>
     </Box>

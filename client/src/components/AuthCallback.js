@@ -24,3 +24,4 @@ function AuthCallback({ setIsAuthenticated }) {
 }
 
 export default AuthCallback;
+
