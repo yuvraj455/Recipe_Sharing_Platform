@@ -5,39 +5,47 @@ import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 function Navbar({ isAuthenticated, setIsAuthenticated }) {
   const navigate = useNavigate();
 
+  // Function to handle user logout
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    setIsAuthenticated(false);
-    navigate('/');
+    localStorage.removeItem('token'); // Remove the authentication token
+    localStorage.removeItem('userId'); // Remove the stored user ID
+    setIsAuthenticated(false); // Update authentication state
+    navigate('/'); // Redirect to the homepage
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#004d47', boxShadow: 'none', fontFamily: '"Roboto", sans-serif' }}>
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: '#004d47', // Set background color
+        boxShadow: 'none', // Remove default shadow
+        fontFamily: '"Roboto", sans-serif', // Use Roboto font
+      }}
+    >
       <Toolbar>
-        {/* Logo Section */}
+        {/* Logo and Title Section */}
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Box
             component="img"
-            src="https://www.yummyrecipe.co/yummy-logo-fb.jpg"
+            src="https://www.yummyrecipe.co/yummy-logo-fb.jpg" // Logo URL
             alt="Recipe Sharing Logo"
             sx={{
-              width: '40px', // Adjust the size of the logo
-              height: '40px',
-              marginRight: '10px', // Adds space between logo and text
+              width: '40px', // Logo width
+              height: '40px', // Logo height
+              marginRight: '10px', // Space between logo and text
             }}
           />
           <Typography
             variant="h6"
-            component={Link}
+            component={Link} // Make the title a clickable link
             to="/"
             sx={{
-              textDecoration: 'none',
-              color: '#fff',
-              fontFamily: '"Lora", serif',
-              fontWeight: 'bold',
+              textDecoration: 'none', // Remove underline
+              color: '#fff', // White text color
+              fontFamily: '"Lora", serif', // Use Lora font for title
+              fontWeight: 'bold', // Bold font weight
               '&:hover': {
-                color: '#ff7043',
+                color: '#ff7043', // Change color on hover
               },
             }}
           >
@@ -45,24 +53,27 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
           </Typography>
         </Box>
 
-        {/* Navigation Links */}
-        <Box sx={{ marginLeft: 'auto' }}>
+        {/* Navigation Buttons */}
+        <Box sx={{ marginLeft: 'auto' }}> {/* Push navigation buttons to the right */}
+          {/* Home Button */}
           <Button
             color="inherit"
             component={Link}
             to="/"
             sx={{
-              color: '#fff',
-              fontFamily: '"Roboto", sans-serif',
+              color: '#fff', // White text color
+              fontFamily: '"Roboto", sans-serif', // Font styling
               fontWeight: 'bold',
               '&:hover': {
-                color: '#ff7043',
-                backgroundColor: 'transparent',
+                color: '#ff7043', // Change text color on hover
+                backgroundColor: 'transparent', // No background color on hover
               },
             }}
           >
             Home
           </Button>
+
+          {/* All Recipes Button */}
           <Button
             color="inherit"
             component={Link}
@@ -79,8 +90,10 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
           >
             All Recipes
           </Button>
+
           {isAuthenticated ? (
             <>
+              {/* Add Recipe Button for Authenticated Users */}
               <Button
                 color="inherit"
                 component={Link}
@@ -97,6 +110,8 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
               >
                 Add Recipe
               </Button>
+
+              {/* Logout Button */}
               <Button
                 color="inherit"
                 onClick={handleLogout}
@@ -115,6 +130,7 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
             </>
           ) : (
             <>
+              {/* Login Button for Unauthenticated Users */}
               <Button
                 color="inherit"
                 component={Link}
@@ -131,6 +147,8 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
               >
                 Login
               </Button>
+
+              {/* Register Button for Unauthenticated Users */}
               <Button
                 color="inherit"
                 component={Link}
