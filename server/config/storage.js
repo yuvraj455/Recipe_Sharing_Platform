@@ -1,12 +1,23 @@
 const { Storage } = require('@google-cloud/storage');
 const path = require('path');
 
-const storage = new Storage({
-  keyFilename: path.join(__dirname, '../yuvrajjindal-f2baa39c4d02.json'),
-  projectId: 'yuvrajjindal',
-});
+let bucket;
 
-const bucket = storage.bucket('yuvrajjindal');
+const initializeStorage = () => {
+  const storage = new Storage({
+    keyFilename: path.join(__dirname, '../google-cloud-key.json'),
+    projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
+  });
 
-module.exports = { bucket };
+  bucket = storage.bucket(process.env.GOOGLE_CLOUD_BUCKET_NAME);
+};
+
+const getBucket = () => {
+  if (!bucket) {
+    throw new Error('Storage has not been initialized. Call initializeStorage first.');
+  }
+  return bucket;
+};
+
+module.exports = { initializeStorage, getBucket };
 
