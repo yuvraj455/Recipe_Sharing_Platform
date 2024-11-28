@@ -42,7 +42,7 @@ router.get(
   passport.authenticate('google', { failureRedirect: '/login', session: false }),
   (req, res) => {
     const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    res.redirect(`http://localhost:3000/auth-callback?token=${token}&userId=${req.user._id}`);
+    res.redirect(`https://recipe-sharing-platform2.onrender.com/auth-callback?token=${token}&userId=${req.user._id}`);
   }
 );
 
