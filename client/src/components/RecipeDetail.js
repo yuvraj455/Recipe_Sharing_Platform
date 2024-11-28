@@ -28,7 +28,7 @@ function RecipeDetail({ isAuthenticated }) {
   const handleDelete = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/recipes/${id}`, {
+      await axios.delete(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       navigate('/recipes');
