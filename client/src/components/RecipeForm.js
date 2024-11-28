@@ -20,7 +20,7 @@ function RecipeForm() {
       const fetchRecipe = async () => {
         try {
           const token = localStorage.getItem('token');
-          const response = await axios.get(`http://localhost:5000/api/recipes/${id}`, {
+          const response = await axios.get(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           const recipe = response.data;
@@ -69,9 +69,9 @@ function RecipeForm() {
       };
 
       if (id) {
-        await axios.put(`http://localhost:5000/api/recipes/${id}`, formData, config);
+        await axios.put(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes/${id}`, formData, config);
       } else {
-        await axios.post('http://localhost:5000/api/recipes', formData, config);
+        await axios.post('https://recipe-sharing-platform-av3r.onrender.com/api/recipes', formData, config);
       }
       navigate('/recipes');
     } catch (error) {

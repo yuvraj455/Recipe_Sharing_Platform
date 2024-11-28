@@ -22,7 +22,7 @@ const RecipeCard = ({ recipe, searchTerm }) => {
         <CardMedia
           component="img"
           height="140"
-          image={recipe.image ? `http://localhost:5000${recipe.image}` : '/placeholder.svg?height=140&width=280'}
+          image={recipe.image ? `https://recipe-sharing-platform-av3r.onrender.com${recipe.image}` : '/placeholder.svg?height=140&width=280'}
           alt={recipe.title || 'Recipe image'}
         />
         <CardContent>
