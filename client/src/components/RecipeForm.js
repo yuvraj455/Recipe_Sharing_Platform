@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Container, TextField, Button, Typography, Alert, CircularProgress } from '@mui/material';
+import { Container, TextField, Button, Typography, Box, Alert, CircularProgress } from '@mui/material';
 import axios from 'axios';
+
 
 function RecipeForm() {
   const [title, setTitle] = useState('');
@@ -17,17 +18,14 @@ function RecipeForm() {
     if (id) {
       const fetchRecipe = async () => {
         try {
-          const token = localStorage.getItem('token');
-          const response = await axios.get(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes/${id}`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
+          const response = await axios.get(`http://localhost:5000/api/recipes/${id}`);
           const recipe = response.data;
           setTitle(recipe.title);
           setIngredients(recipe.ingredients.join(', '));
           setInstructions(recipe.instructions);
         } catch (error) {
           console.error('Error fetching recipe', error);
-          setError('Error fetching recipe');
+          setError('Error fetching recipe: ' + (error.response?.data?.message || error.message));
         }
       };
       fetchRecipe();
@@ -57,20 +55,31 @@ function RecipeForm() {
       };
 
       if (id) {
-        await axios.put(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes/${id}`, formData, config);
+        await axios.put(`http://localhost:5000/api/recipes/${id}`, formData, config);
       } else {
-        await axios.post(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes`, formData, config);
+        await axios.post('http://localhost:5000/api/recipes', formData, config);
       }
       navigate('/recipes');
     } catch (error) {
       console.error('Error saving recipe', error);
-      setError(error.response?.data?.message || 'Error saving recipe. Please try again.');
+      setError('Error saving recipe: ' + (error.response?.data?.message || error.message));
     } finally {
       setLoading(false);
     }
   };
 
   return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh', // Full viewport height
+        backgroundColor: '#fff7e6',
+        padding: 0, // Remove padding on outer Box to make it stretch fully
+      }}
+    >
     <Container maxWidth="sm">
       <Typography variant="h4" component="h1" gutterBottom>
         {id ? 'Edit Recipe' : 'Add New Recipe'}
@@ -113,15 +122,15 @@ function RecipeForm() {
         <Button 
           type="submit" 
           variant="contained" 
-          color="primary" 
           fullWidth 
-          sx={{ mt: 2 }}
+          sx={{ mt: 2, backgroundColor: '#004d47' }}
           disabled={loading}
         >
           {loading ? <CircularProgress size={24} /> : (id ? 'Update Recipe' : 'Add Recipe')}
         </Button>
       </form>
     </Container>
+    </Box>
   );
 }
 

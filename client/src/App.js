@@ -15,12 +15,16 @@ const theme = createTheme();
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
+  // Check if the user is authenticated on initial load by checking localStorage
   useEffect(() => {
     const token = localStorage.getItem('token');
-    setIsAuthenticated(!!token);
+    const userId = localStorage.getItem('userId');
+    setIsAuthenticated(!!(token && userId)); // If both token and userId exist, user is authenticated
   }, []);
 
+  // PrivateRoute component that checks if the user is authenticated
   const PrivateRoute = ({ children }) => {
     return isAuthenticated ? children : <Navigate to="/login" />;
   };
@@ -29,13 +33,24 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
-        <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
+        <Navbar 
+          isAuthenticated={isAuthenticated} 
+          setIsAuthenticated={setIsAuthenticated}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+        />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/register" element={<Register setIsAuthenticated={setIsAuthenticated} />} />
-          <Route path="/recipes" element={<RecipeList isAuthenticated={isAuthenticated} />} />
-          <Route path="/recipes/:id" element={<RecipeDetail isAuthenticated={isAuthenticated} />} />
+          <Route 
+            path="/recipes" 
+            element={<RecipeList isAuthenticated={isAuthenticated} searchTerm={searchTerm} />} 
+          />
+          <Route 
+            path="/recipes/:id" 
+            element={<RecipeDetail isAuthenticated={isAuthenticated} />} 
+          />
           <Route 
             path="/recipes/new" 
             element={
@@ -52,7 +67,10 @@ function App() {
               </PrivateRoute>
             } 
           />
-          <Route path="/auth-callback" element={<AuthCallback setIsAuthenticated={setIsAuthenticated} />} />
+          <Route 
+            path="/auth-callback" 
+            element={<AuthCallback setIsAuthenticated={setIsAuthenticated} />} 
+          />
         </Routes>
       </Router>
     </ThemeProvider>
@@ -60,4 +78,3 @@ function App() {
 }
 
 export default App;
-
