@@ -13,7 +13,7 @@ function RecipeDetail({ isAuthenticated }) {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/recipes/${id}`);
+        const response = await axios.get(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes/${id}`);
         setRecipe(response.data);
         setLoading(false);
       } catch (error) {
