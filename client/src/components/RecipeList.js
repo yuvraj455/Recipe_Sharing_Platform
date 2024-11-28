@@ -49,7 +49,7 @@ function RecipeList({ isAuthenticated }) {
         Recipes
       </Typography>
       {isAuthenticated && (
-        <Button component={Link} to="/recipes/new" variant="contained" color="primary" sx={{ mb: 2 }}>
+        <Button component={Link} to="/recipes/new" variant="contained" sx={{ mb: 2, backgroundColor: '#004d47' }}>
           Add New Recipe
         </Button>
       )}

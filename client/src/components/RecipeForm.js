@@ -122,9 +122,8 @@ function RecipeForm() {
         <Button 
           type="submit" 
           variant="contained" 
-          color="primary" 
           fullWidth 
-          sx={{ mt: 2 }}
+          sx={{ mt: 2, backgroundColor: '#004d47' }}
           disabled={loading}
         >
           {loading ? <CircularProgress size={24} /> : (id ? 'Update Recipe' : 'Add Recipe')}
