@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Container, TextField, Button, Typography, Alert, CircularProgress } from '@mui/material';
+import { Container, TextField, Button, Typography, Alert, Box, CircularProgress } from '@mui/material';
 import axios from 'axios';
 
 function RecipeForm() {
@@ -9,6 +9,7 @@ function RecipeForm() {
   const [instructions, setInstructions] = useState('');
   const [youtubeLink, setYoutubeLink] = useState('');
   const [image, setImage] = useState(null);
+  const [imageName, setImageName] = useState('No file chosen');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -37,6 +38,16 @@ function RecipeForm() {
       fetchRecipe();
     }
   }, [id]);
+
+  // Handler for file input change (selecting an image)
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file); // Updating the image state
+      setImageName(file.name); // Displaying the selected file name
+    }
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -84,7 +95,29 @@ function RecipeForm() {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        backgroundImage: `url('https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L3B4MTM2OTgxMy1pbWFnZS1rd3Z4eHA5MS5qcGc.jpg')`, // Custom background image
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        padding: 0,
+      }}
+    >
+    <Container maxWidth="sm"
+    sx={{
+      backgroundColor: '#FFFFF0', // Light background for the form
+      padding: '10px',
+      borderRadius: '20px', // Rounded corners for the form container
+      boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.25)', // Subtle shadow for the form container
+    }}
+  >
+
       <Typography variant="h4" component="h1" gutterBottom>
         {id ? 'Edit Recipe' : 'Add New Recipe'}
       </Typography>
@@ -125,23 +158,48 @@ function RecipeForm() {
           value={youtubeLink}
           onChange={(e) => setYoutubeLink(e.target.value)}
         />
-        <input
-          accept="image/*"
-          type="file"
-          onChange={(e) => setImage(e.target.files[0])}
-        />
+        <Box sx={{ mt: 2, mb: 2 }}>
+            <input
+              accept="image/*"
+              type="file"
+              id="upload-image"
+              style={{ display: 'none' }}
+              onChange={handleFileChange} // Handling image file input change
+            />
+
+<label htmlFor="upload-image">
+              <Button
+                variant="outlined"
+                component="span"
+                sx={{
+                  textTransform: 'none',
+                  borderRadius: '10px',
+                  backgroundColor: '#F5F5F5',
+                  '&:hover': {
+                    backgroundColor: '#E0E0E0',
+                  },
+                }}
+              >
+                Choose Dish Image
+              </Button>
+              </label>
+            <Typography variant="body2" sx={{ mt: 1, color: '#555' }}>
+              {imageName} 
+            </Typography>
+</Box>
         <Button 
           type="submit" 
           variant="contained" 
           color="primary" 
           fullWidth 
-          sx={{ mt: 2 }}
+          sx={{ mt: 2, backgroundColor: '#004d47', borderRadius: '10px' }}
           disabled={loading}
         >
           {loading ? <CircularProgress size={24} /> : (id ? 'Update Recipe' : 'Add Recipe')}
         </Button>
       </form>
     </Container>
+    </Box>
   );
 }
 
