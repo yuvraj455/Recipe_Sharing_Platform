@@ -8,21 +8,25 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 
+// Helper function to check if the current user is the author of the recipe.
 const isAuthor = (recipe, userId) => {
   if (!recipe || !userId) return false;
   const authorId = recipe.author ? (recipe.author._id || recipe.author) : null;
   return authorId === userId;
 };
 
+// RecipeDetail component displays the details of a single recipe.
 function RecipeDetail({ isAuthenticated }) {
-  const [recipe, setRecipe] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [showAllIngredients, setShowAllIngredients] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
-  const { id } = useParams();
-  const navigate = useNavigate();
+  // State variables to manage recipe data, loading, error messages, and other UI states.
+  const [recipe, setRecipe] = useState(null); // Stores the recipe data.
+  const [loading, setLoading] = useState(true); // Indicates whether the data is still loading.
+  const [error, setError] = useState(null); // Stores any error messages.
+  const [showAllIngredients, setShowAllIngredients] = useState(false); // Toggles the visibility of ingredients.
+  const [openDialog, setOpenDialog] = useState(false); // Manages the visibility of the delete confirmation dialog.
+  const { id } = useParams(); // Extracts the recipe ID from the URL parameters.
+  const navigate = useNavigate(); // Hook to navigate programmatically.
 
+  // Fetch recipe details from the API.
   const fetchRecipe = useCallback(async () => {
     try {
       const response = await axios.get(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes/${id}`);
@@ -35,25 +39,28 @@ function RecipeDetail({ isAuthenticated }) {
     }
   }, [id]);
 
+  // Fetch the recipe data when the component mounts or when `fetchRecipe` changes.
   useEffect(() => {
     fetchRecipe();
   }, [fetchRecipe]);
 
+  // Handle recipe deletion.
   const handleDelete = useCallback(async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token'); // Retrieve the user's token for authorization.
       await axios.delete(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      navigate('/recipes');
+      navigate('/recipes'); // Navigate to the recipes list after deletion.
     } catch (error) {
       console.error('Error deleting recipe', error);
       setError('Error deleting recipe. Please try again.');
     }
   }, [id, navigate]);
 
+  // Debugging information for developers to validate state variables.
   const debugInfo = useMemo(() => {
-    const userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem('userId'); // Fetch user ID from localStorage.
     return {
       recipeAuthorId: recipe?.author ? recipe.author._id || recipe.author : 'No author ID',
       localStorageUserId: userId,
@@ -62,16 +69,20 @@ function RecipeDetail({ isAuthenticated }) {
     };
   }, [recipe, isAuthenticated]);
 
+  // Parse the ingredients string into an array of individual ingredients.
   const parseIngredients = useCallback((ingredientString) => {
     return ingredientString.split(',').map(item => item.trim());
   }, []);
 
+  // Conditional rendering for loading, error, or missing recipe scenarios.
   if (loading) return <CircularProgress sx={{ color: '#4caf50' }} />;
   if (error) return <Typography color="error" sx={{ fontWeight: 'bold' }}>{error}</Typography>;
   if (!recipe) return <Typography sx={{ fontSize: '1.2rem', fontStyle: 'italic' }}>Recipe not found.</Typography>;
 
+  // Process the ingredients list for display.
   const ingredientsList = recipe.ingredients.flatMap(parseIngredients);
 
+  // Handlers for the delete confirmation dialog.
   const handleDialogOpen = () => setOpenDialog(true);
   const handleDialogClose = () => setOpenDialog(false);
 
@@ -88,6 +99,7 @@ function RecipeDetail({ isAuthenticated }) {
         marginTop: '20px',
       }}
     >
+      {/* Recipe Details Container */}
       <Container
         sx={{
           backgroundColor: '#ffffff',
@@ -98,10 +110,12 @@ function RecipeDetail({ isAuthenticated }) {
           maxWidth: 900,
         }}
       >
+        {/* Recipe Title */}
         <Typography variant="h4" component="h1" gutterBottom sx={{ textAlign: 'center', color: '#333' }}>
           {recipe.title}
         </Typography>
 
+        {/* Recipe Image */}
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
           <Card sx={{ maxWidth: 345, borderRadius: '8px' }}>
             <CardMedia
@@ -119,10 +133,12 @@ function RecipeDetail({ isAuthenticated }) {
           </Card>
         </Box>
 
+        {/* Recipe Author */}
         <Typography variant="subtitle1" gutterBottom sx={{ textAlign: 'center', color: '#777' }}>
           by {recipe.author ? (recipe.author.username || recipe.author.name || 'Unknown') : 'Unknown'}
         </Typography>
 
+        {/* YouTube Link */}
         {recipe.youtubeLink && (
           <Box sx={{ textAlign: 'center', my: 2 }}>
             <MuiLink href={recipe.youtubeLink} target="_blank" rel="noopener noreferrer">
@@ -131,6 +147,7 @@ function RecipeDetail({ isAuthenticated }) {
           </Box>
         )}
 
+        {/* Ingredients List */}
         <Typography variant="h6" gutterBottom sx={{ color: '#4caf50' }}>
           Ingredients:
         </Typography>
@@ -158,6 +175,7 @@ function RecipeDetail({ isAuthenticated }) {
           </Button>
         )}
 
+        {/* Instructions */}
         <Typography variant="h6" gutterBottom sx={{ color: '#4caf50', marginTop: 3 }}>
           Instructions:
         </Typography>
@@ -174,6 +192,7 @@ function RecipeDetail({ isAuthenticated }) {
           {recipe.instructions}
         </Box>
 
+        {/* Edit/Delete Buttons (Visible to Authors) */}
         {isAuthenticated && debugInfo.isAuthor && (
           <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, marginTop: 3 }}>
             <Button
@@ -203,6 +222,7 @@ function RecipeDetail({ isAuthenticated }) {
         )}
       </Container>
 
+      {/* Delete Confirmation Dialog */}
       <Dialog open={openDialog} onClose={handleDialogClose}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
@@ -230,4 +250,3 @@ function RecipeDetail({ isAuthenticated }) {
 }
 
 export default RecipeDetail;
-
