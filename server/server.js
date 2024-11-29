@@ -1,40 +1,42 @@
-require('dotenv').config(); // Load environment variables from a .env file
-const express = require('express'); // Import express for handling HTTP requests
-const mongoose = require('mongoose'); // Import mongoose for interacting with MongoDB
-const cors = require('cors'); // Import CORS for enabling cross-origin requests
-const passport = require('./config/passport'); // Import passport for authentication
-const authRoutes = require('./routes/auth'); // Import authentication-related routes
-const recipeRoutes = require('./routes/recipes'); // Import recipe-related routes
-const path = require('path'); // Import path for working with file paths
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const passport = require('./config/passport');
+const authRoutes = require('./routes/auth');
+const recipeRoutes = require('./routes/recipes');
+const path = require('path');
 
-const app = express(); // Create an instance of the express application
+const app = express();
 
-// Middleware setup
-app.use(cors()); // Enable cross-origin requests to the server
-app.use(express.json()); // Middleware to parse JSON bodies in incoming requests
-app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded data
-app.use(passport.initialize()); // Initialize passport for handling authentication
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
 
-// Serve uploaded files from the 'uploads' directory
+// Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Connect to MongoDB using the connection string from the environment variables
+// Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Connected to MongoDB')) // Log success message
-  .catch(err => console.error('MongoDB connection error:', err)); // Log error if connection fails
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
-// Define routes for authentication and recipe APIs
-app.use('/auth', authRoutes); // Handle authentication-related routes under '/auth'
-app.use('/api', recipeRoutes); // Handle recipe-related routes under '/api'
+// Routes
+app.use('/auth', authRoutes);
+app.use('/api', recipeRoutes);
 
-// Error handling middleware for catching errors in the application
+// Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack); // Log the error stack for debugging
-  res.status(500).json({ message: 'Something went wrong!', error: err.message }); // Send a generic error message with the error details
+  console.error('Unhandled error:', err);
+  res.status(500).json({
+    message: 'An unexpected error occurred',
+    error: err.message,
+    stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack
+  });
 });
 
-// Set the port for the server to listen on (from environment variable or default to 5000)
 const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-// Start the server and listen on the specified port
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`)); // Log a message when the server starts

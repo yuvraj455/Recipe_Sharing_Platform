@@ -69,6 +69,7 @@ function RecipeForm() {
       navigate('/recipes');
     } catch (error) {
       console.error('Error saving recipe', error);
+      console.error('Error response:', error.response);
       setError(error.response?.data?.message || 'Error saving recipe. Please try again.');
     } finally {
       setLoading(false);
