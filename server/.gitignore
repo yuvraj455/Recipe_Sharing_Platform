@@ -1,2 +1,8 @@
-# ... (other entries)
+# ... other entries ...
+
+# Google Cloud credentials
 google-cloud-key.json
+
+# Environment variables
+.env
+

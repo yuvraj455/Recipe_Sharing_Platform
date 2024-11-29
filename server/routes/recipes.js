@@ -1,19 +1,11 @@
 const express = require('express');
 const multer = require('multer');
-const { Storage } = require('@google-cloud/storage');
+const { bucket } = require('../config/googleCloudStorage');
 const path = require('path');
 const Recipe = require('../models/Recipe');
 const authenticate = require('../middleware/authenticate');
 
 const router = express.Router();
-
-// Set up Google Cloud Storage
-const storage = new Storage({
-  keyFilename: path.join(__dirname, '../google-cloud-key.json'),
-  projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
-});
-
-const bucket = storage.bucket(process.env.GOOGLE_CLOUD_BUCKET_NAME);
 
 // Set up multer for handling file uploads
 const upload = multer({
