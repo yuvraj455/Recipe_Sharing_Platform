@@ -28,6 +28,7 @@ const uploadToGCS = (file) => {
     });
 
     blobStream.on('error', (err) => {
+      console.error('Error uploading to GCS:', err);
       reject(err);
     });
 
@@ -81,11 +82,15 @@ router.get('/recipes/:id', async (req, res) => {
 // Create a new recipe (authenticated)
 router.post('/recipes', authenticate, upload.single('image'), async (req, res) => {
   try {
+    console.log('Received recipe data:', req.body);
+    console.log('Received file:', req.file);
+
     const { title, ingredients, instructions, youtubeLink } = req.body;
     let imageUrl = null;
 
     if (req.file) {
       imageUrl = await uploadToGCS(req.file);
+      console.log('Uploaded image URL:', imageUrl);
     }
 
     const recipe = new Recipe({
@@ -96,7 +101,12 @@ router.post('/recipes', authenticate, upload.single('image'), async (req, res) =
       image: imageUrl,
       author: req.user._id
     });
+
+    console.log('Created recipe object:', recipe);
+
     await recipe.save();
+    console.log('Recipe saved successfully');
+
     res.status(201).json(recipe);
   } catch (error) {
     console.error('Error creating recipe:', error);
