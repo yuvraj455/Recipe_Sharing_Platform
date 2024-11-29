@@ -29,7 +29,7 @@ const RecipeCard = ({ recipe, searchTerm }) => {
             {highlightSearchTerm(recipe.title || 'Untitled Recipe', searchTerm)}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {recipe.description || 'No description available'}
+          {recipe.author ? (recipe.author.username || recipe.author.name || 'Unknown') : 'Unknown'}
           </Typography>
         </CardContent>
       </CardActionArea>
