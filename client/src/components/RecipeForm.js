@@ -19,7 +19,7 @@ function RecipeForm() {
       const fetchRecipe = async () => {
         try {
           const token = localStorage.getItem('token');
-          const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/recipes/${id}`, {
+          const response = await axios.get(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           const recipe = response.data;
@@ -61,9 +61,9 @@ function RecipeForm() {
 
       let response;
       if (id) {
-        response = await axios.put(`${process.env.REACT_APP_API_URL}/api/recipes/${id}`, formData, config);
+        response = await axios.put(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes/${id}`, formData, config);
       } else {
-        response = await axios.post(`${process.env.REACT_APP_API_URL}/api/recipes`, formData, config);
+        response = await axios.post(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes`, formData, config);
       }
       console.log('Recipe saved:', response.data);
       navigate('/recipes');
