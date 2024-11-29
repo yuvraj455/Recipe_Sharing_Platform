@@ -3,7 +3,7 @@
 Welcome to the **Recipe Sharing CRUD Platform**, a dynamic application for sharing, viewing, and managing recipes globally! Built with a modern tech stack, this platform offers seamless functionality for recipe enthusiasts to connect and share their culinary creations. 🍳✨
 
 ## 🌐 **Live Site**
-Visit the live application here: [Recipe Sharing Platform](http://localhost:3000)
+Visit the live application here: [Recipe Sharing Platform](https://recipe-sharing-platform2.onrender.com)
 
 ---
 
