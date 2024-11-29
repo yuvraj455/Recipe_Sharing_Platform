@@ -14,12 +14,14 @@ function RecipeForm() {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  const API_URL = 'https://recipe-sharing-platform-av3r.onrender.com';
+
   useEffect(() => {
     if (id) {
       const fetchRecipe = async () => {
         try {
           const token = localStorage.getItem('token');
-          const response = await axios.get(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes/${id}`, {
+          const response = await axios.get(`${API_URL}/api/recipes/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           const recipe = response.data;
@@ -61,16 +63,21 @@ function RecipeForm() {
 
       let response;
       if (id) {
-        response = await axios.put(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes/${id}`, formData, config);
+        response = await axios.put(`${API_URL}/api/recipes/${id}`, formData, config);
       } else {
-        response = await axios.post(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes`, formData, config);
+        response = await axios.post(`${API_URL}/api/recipes`, formData, config);
       }
       console.log('Recipe saved:', response.data);
       navigate('/recipes');
     } catch (error) {
       console.error('Error saving recipe', error);
-      console.error('Error response:', error.response);
-      setError(error.response?.data?.message || 'Error saving recipe. Please try again.');
+      if (error.response && error.response.status === 401) {
+        // Token is invalid or expired
+        localStorage.removeItem('token');
+        navigate('/login');
+      } else {
+        setError(error.response?.data?.message || 'Error saving recipe. Please try again.');
+      }
     } finally {
       setLoading(false);
     }

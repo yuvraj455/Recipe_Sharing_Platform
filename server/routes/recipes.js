@@ -89,8 +89,13 @@ router.post('/recipes', authenticate, upload.single('image'), async (req, res) =
     let imageUrl = null;
 
     if (req.file) {
-      imageUrl = await uploadToGCS(req.file);
-      console.log('Uploaded image URL:', imageUrl);
+      try {
+        imageUrl = await uploadToGCS(req.file);
+        console.log('Uploaded image URL:', imageUrl);
+      } catch (uploadError) {
+        console.error('Error uploading to GCS:', uploadError);
+        return res.status(500).json({ message: 'Error uploading image', error: uploadError.message });
+      }
     }
 
     const recipe = new Recipe({
@@ -110,7 +115,11 @@ router.post('/recipes', authenticate, upload.single('image'), async (req, res) =
     res.status(201).json(recipe);
   } catch (error) {
     console.error('Error creating recipe:', error);
-    res.status(500).json({ message: 'Error creating recipe', error: error.message });
+    res.status(500).json({ 
+      message: 'Error creating recipe', 
+      error: error.message,
+      stack: process.env.NODE_ENV === 'production' ? '🥞' : error.stack
+    });
   }
 });
 
