@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 
-// Helper function to check if the current user is the author of the recipe
 const isAuthor = (recipe, userId) => {
   if (!recipe || !userId) return false;
   const authorId = recipe.author ? (recipe.author._id || recipe.author) : null;
@@ -16,18 +15,17 @@ const isAuthor = (recipe, userId) => {
 };
 
 function RecipeDetail({ isAuthenticated }) {
-  const [recipe, setRecipe] = useState(null); // Store the fetched recipe data
-  const [loading, setLoading] = useState(true); // Track loading state
-  const [error, setError] = useState(null); // Track any error that occurs during fetch
-  const [showAllIngredients, setShowAllIngredients] = useState(false); // Toggle to show all ingredients
-  const [openDialog, setOpenDialog] = useState(false); // Toggle the deletion confirmation dialog
-  const { id } = useParams(); // Get the recipe ID from the URL parameters
-  const navigate = useNavigate(); // Function to navigate between pages
+  const [recipe, setRecipe] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showAllIngredients, setShowAllIngredients] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  // Fetch recipe data from the API when the component mounts
   const fetchRecipe = useCallback(async () => {
     try {
-      const response = await axios.get(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes/${id}`);
+      const response = await axios.get(`http://localhost:5000/api/recipes/${id}`);
       setRecipe(response.data);
       setLoading(false);
     } catch (error) {
@@ -37,57 +35,44 @@ function RecipeDetail({ isAuthenticated }) {
     }
   }, [id]);
 
-  // UseEffect hook to call fetchRecipe when the component mounts
   useEffect(() => {
     fetchRecipe();
   }, [fetchRecipe]);
 
-  // Function to delete a recipe
   const handleDelete = useCallback(async () => {
     try {
-      const token = localStorage.getItem('token'); // Get the JWT token from localStorage
-      await axios.delete(`https://recipe-sharing-platform-av3r.onrender.com/api/recipes/${id}`, {
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:5000/api/recipes/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      navigate('/recipes'); // Navigate to the recipes list after deletion
+      navigate('/recipes');
     } catch (error) {
       console.error('Error deleting recipe', error);
       setError('Error deleting recipe. Please try again.');
     }
   }, [id, navigate]);
 
-  // Memoize the debug information to avoid unnecessary recalculations
   const debugInfo = useMemo(() => {
-    const userId = localStorage.getItem('userId'); // Get userId from localStorage
+    const userId = localStorage.getItem('userId');
     return {
       recipeAuthorId: recipe?.author ? recipe.author._id || recipe.author : 'No author ID',
       localStorageUserId: userId,
       isAuthenticated: isAuthenticated,
-      isAuthor: isAuthor(recipe, userId) // Check if the current user is the author of the recipe
+      isAuthor: isAuthor(recipe, userId)
     };
   }, [recipe, isAuthenticated]);
 
-  // Parse the ingredients list into an array of individual items
   const parseIngredients = useCallback((ingredientString) => {
     return ingredientString.split(',').map(item => item.trim());
   }, []);
 
-  // Loading state while fetching data
   if (loading) return <CircularProgress sx={{ color: '#4caf50' }} />;
-
-  // Error handling if recipe data couldn't be fetched
   if (error) return <Typography color="error" sx={{ fontWeight: 'bold' }}>{error}</Typography>;
-
-  // Display message if the recipe is not found
   if (!recipe) return <Typography sx={{ fontSize: '1.2rem', fontStyle: 'italic' }}>Recipe not found.</Typography>;
 
-  // Prepare the ingredients list by splitting each ingredient string
   const ingredientsList = recipe.ingredients.flatMap(parseIngredients);
 
-  // Open the confirmation dialog for deletion
   const handleDialogOpen = () => setOpenDialog(true);
-
-  // Close the confirmation dialog
   const handleDialogClose = () => setOpenDialog(false);
 
   return (
@@ -113,35 +98,31 @@ function RecipeDetail({ isAuthenticated }) {
           maxWidth: 900,
         }}
       >
-        {/* Recipe title */}
         <Typography variant="h4" component="h1" gutterBottom sx={{ textAlign: 'center', color: '#333' }}>
           {recipe.title}
         </Typography>
 
-        {/* Recipe image */}
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
           <Card sx={{ maxWidth: 345, borderRadius: '8px' }}>
             <CardMedia
               component="img"
               height="194"
-              image={recipe.image ? `https://recipe-sharing-platform-av3r.onrender.com${recipe.image}` : '/placeholder.svg?height=194&width=345'}
+              image={recipe.image || '/placeholder.svg?height=194&width=345'}
               alt={recipe.title}
               sx={{
                 borderRadius: '8px',
                 '&:hover': {
-                  boxShadow: '0 0 15px rgba(0, 255, 0, 0.7)', // Hover effect on image
+                  boxShadow: '0 0 15px rgba(0, 255, 0, 0.7)',
                 },
               }}
             />
           </Card>
         </Box>
 
-        {/* Recipe author */}
         <Typography variant="subtitle1" gutterBottom sx={{ textAlign: 'center', color: '#777' }}>
-          By {recipe.author ? (recipe.author.username || recipe.author.name || 'Unknown') : 'Unknown'}
+          by {recipe.author ? (recipe.author.username || recipe.author.name || 'Unknown') : 'Unknown'}
         </Typography>
 
-        {/* YouTube link for recipe video (if provided) */}
         {recipe.youtubeLink && (
           <Box sx={{ textAlign: 'center', my: 2 }}>
             <MuiLink href={recipe.youtubeLink} target="_blank" rel="noopener noreferrer">
@@ -150,7 +131,6 @@ function RecipeDetail({ isAuthenticated }) {
           </Box>
         )}
 
-        {/* Ingredients list with toggle for showing more/less ingredients */}
         <Typography variant="h6" gutterBottom sx={{ color: '#4caf50' }}>
           Ingredients:
         </Typography>
@@ -178,7 +158,6 @@ function RecipeDetail({ isAuthenticated }) {
           </Button>
         )}
 
-        {/* Recipe instructions */}
         <Typography variant="h6" gutterBottom sx={{ color: '#4caf50', marginTop: 3 }}>
           Instructions:
         </Typography>
@@ -195,7 +174,6 @@ function RecipeDetail({ isAuthenticated }) {
           {recipe.instructions}
         </Box>
 
-        {/* Show edit and delete options if the user is authenticated and is the author of the recipe */}
         {isAuthenticated && debugInfo.isAuthor && (
           <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, marginTop: 3 }}>
             <Button
@@ -225,7 +203,6 @@ function RecipeDetail({ isAuthenticated }) {
         )}
       </Container>
 
-      {/* Confirmation dialog for deletion */}
       <Dialog open={openDialog} onClose={handleDialogClose}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
@@ -238,9 +215,11 @@ function RecipeDetail({ isAuthenticated }) {
             Cancel
           </Button>
           <Button
-            onClick={() => { handleDelete(); handleDialogClose(); }}
+            onClick={() => {
+              handleDelete();
+              handleDialogClose();
+            }}
             color="secondary"
-            autoFocus
           >
             Delete
           </Button>
@@ -251,3 +230,4 @@ function RecipeDetail({ isAuthenticated }) {
 }
 
 export default RecipeDetail;
+
