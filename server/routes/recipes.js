@@ -1,10 +1,19 @@
 const express = require('express');
 const multer = require('multer');
-const { bucket } = require('../config/googleCloudStorage');
+const { Storage } = require('@google-cloud/storage');
+const path = require('path');
 const Recipe = require('../models/Recipe');
 const authenticate = require('../middleware/authenticate');
 
 const router = express.Router();
+
+// Set up Google Cloud Storage
+const storage = new Storage({
+  keyFilename: path.join(__dirname, '../google-cloud-key.json'),
+  projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
+});
+
+const bucket = storage.bucket(process.env.GOOGLE_CLOUD_BUCKET_NAME);
 
 // Set up multer for handling file uploads
 const upload = multer({
@@ -94,7 +103,11 @@ router.post('/recipes', authenticate, upload.single('image'), async (req, res) =
         console.log('Uploaded image URL:', imageUrl);
       } catch (uploadError) {
         console.error('Error uploading to GCS:', uploadError);
-        return res.status(500).json({ message: 'Error uploading image', error: uploadError.message });
+        return res.status(500).json({ 
+          message: 'Error uploading image', 
+          error: uploadError.message,
+          details: uploadError.stack
+        });
       }
     }
 
@@ -118,7 +131,7 @@ router.post('/recipes', authenticate, upload.single('image'), async (req, res) =
     res.status(500).json({ 
       message: 'Error creating recipe', 
       error: error.message,
-      stack: process.env.NODE_ENV === 'production' ? '🥞' : error.stack
+      details: error.stack
     });
   }
 });
