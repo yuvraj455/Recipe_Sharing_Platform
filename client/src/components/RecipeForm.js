@@ -58,15 +58,19 @@ function RecipeForm() {
     setLoading(true); // Set loading state to true
     setError(''); // Clear any existing error messages
 
+    if (!image) {
+      setError('Dish image is required.'); // Display error for missing image
+      setLoading(false);
+      return; // Exit the function if image is missing
+    }
+
     // Create a FormData object to handle form submission with a file upload
     const formData = new FormData();
     formData.append('title', title);
     formData.append('ingredients', ingredients);
     formData.append('instructions', instructions);
     formData.append('youtubeLink', youtubeLink);
-    if (image) {
-      formData.append('image', image); // Append the image file to the form data
-    }
+    formData.append('image', image); // Append the image file to the form data
 
     try {
       const token = localStorage.getItem('token'); // Retrieve the token for authentication
@@ -173,7 +177,6 @@ function RecipeForm() {
               id="upload-image"
               style={{ display: 'none' }}
               onChange={handleFileChange}
-              required // Handle image file input change
             />
             <label htmlFor="upload-image">
               <Button
@@ -194,6 +197,11 @@ function RecipeForm() {
             <Typography variant="body2" sx={{ mt: 1, color: '#555' }}>
               {imageName} {/* Display the chosen image file name */}
             </Typography>
+            {error && error.includes('Dish image') && (
+              <Typography variant="body2" sx={{ color: 'red', mt: 1 }}>
+                {error} {/* Display specific image error */}
+              </Typography>
+            )}
           </Box>
           <Button
             type="submit"
