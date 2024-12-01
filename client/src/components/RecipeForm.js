@@ -176,7 +176,7 @@ function RecipeForm() {
               type="file"
               id="upload-image"
               style={{ display: 'none' }}
-              onChange={handleFileChange}
+              onChange={handleFileChange} // Handle image file input change
             />
             <label htmlFor="upload-image">
               <Button

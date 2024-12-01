@@ -3,7 +3,7 @@
 Welcome to the **Recipe Sharing CRUD Platform**, a dynamic application for sharing, viewing, and managing recipes globally! Built with a modern tech stack, this platform offers seamless functionality for recipe enthusiasts to connect and share their culinary creations. 🍳✨
 
 ## 🌐 **Live Site**
-Visit the live application here: [Recipe Sharing Platform](http://localhost:3000)
+Visit the live application here: [Recipe Sharing Platform](https://recipe-sharing-platform2.onrender.com)
 
 ---
 
@@ -110,7 +110,25 @@ This project includes the following advanced features:
 - All code changes were tracked with descriptive commit messages. No manual uploads were made via GitHub Web UI.
 
 ### **Acknowledgments (External Sources Used):**
+https://stackoverflow.com/questions/27623315/how-to-upload-an-image-from-web-into-google-cloud-storage/27624158
 
+https://stackoverflow.com/questions/48477685/search-functionality-for-mongoose-collection
+
+https://stackoverflow.com/questions/66672119/how-to-store-my-jwt-token-correctly-and-return-data-in-mern-app
+
+https://stackoverflow.com/questions/62384395/protected-route-with-react-router-v6
+
+https://stackoverflow.com/questions/76485856/what-is-the-best-way-to-upload-and-load-files-using-a-google-cloud-bucket\
+
+https://expressjs.com/en/guide/using-middleware.html
+
+https://www.passportjs.org/concepts/authentication/middleware/
+
+https://www.passportjs.org/concepts/authentication/google/
+
+https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+
+https://chatgpt.com/
 
 ---
 
